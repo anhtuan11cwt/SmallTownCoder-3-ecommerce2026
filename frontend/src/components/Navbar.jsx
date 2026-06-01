@@ -11,14 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-const auth = false;
-
-const logoutHandler = () => {
-  alert("Logged out");
-};
+import { useUserData } from "@/context/use-user-data";
 
 const Navbar = () => {
+  const { isAuth, logoutUser } = useUserData();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -74,7 +70,7 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="cursor-pointer" size="icon" variant="ghost">
-                  {auth ? (
+                  {isAuth ? (
                     <User className="h-5 w-5" />
                   ) : (
                     <LogIn className="h-5 w-5" />
@@ -84,7 +80,7 @@ const Navbar = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Tài Khoản</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {!auth ? (
+                {!isAuth ? (
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => navigate("/login")}
@@ -108,7 +104,7 @@ const Navbar = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={logoutHandler}
+                      onClick={logoutUser}
                     >
                       Đăng Xuất
                     </DropdownMenuItem>
@@ -141,7 +137,7 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="cursor-pointer" size="icon" variant="ghost">
-                {auth ? (
+                {isAuth ? (
                   <User className="h-5 w-5" />
                 ) : (
                   <LogIn className="h-5 w-5" />
@@ -151,7 +147,7 @@ const Navbar = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {!auth ? (
+              {!isAuth ? (
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => navigate("/login")}
@@ -175,7 +171,7 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={logoutHandler}
+                    onClick={logoutUser}
                   >
                     Logout
                   </DropdownMenuItem>
