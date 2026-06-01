@@ -36,6 +36,10 @@ const orderSchema = new mongoose.Schema({
     required: true,
     type: Number,
   },
+  status: {
+    default: "pending",
+    type: String,
+  },
   subTotal: {
     required: true,
     type: Number,
