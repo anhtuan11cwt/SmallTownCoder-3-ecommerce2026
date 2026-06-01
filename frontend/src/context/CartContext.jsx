@@ -41,6 +41,34 @@ export const CartProvider = ({ children }) => {
     }
   }
 
+  async function updateCart(action, id) {
+    try {
+      const token = Cookies.get("token") || localStorage.getItem("token");
+      const { data } = await axios.post(
+        `${SERVER}/api/cart/update?action=${action}`,
+        { id },
+        { headers: { token } },
+      );
+      toast.success(data.message);
+      fetchCart();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
+    }
+  }
+
+  async function removeFromCart(id) {
+    try {
+      const token = Cookies.get("token") || localStorage.getItem("token");
+      const { data } = await axios.get(`${SERVER}/api/cart/remove/${id}`, {
+        headers: { token },
+      });
+      toast.success(data.message);
+      fetchCart();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
+    }
+  }
+
   useEffect(() => {
     let ignore = false;
 
@@ -74,9 +102,11 @@ export const CartProvider = ({ children }) => {
         addToCart,
         cart,
         fetchCart,
+        removeFromCart,
         setTotalItem,
         subTotal,
         totalItem,
+        updateCart,
       }}
     >
       {children}
