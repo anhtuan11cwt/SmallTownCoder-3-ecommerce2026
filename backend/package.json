@@ -3,10 +3,13 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.6.3"
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.3",
+    "nodemailer": "^8.0.10"
   },
   "description": "",
   "devDependencies": {
+    "@biomejs/biome": "2.4.16",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.4.1",
     "globals": "^17.6.0",

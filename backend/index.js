@@ -1,11 +1,19 @@
 import dotenv from "dotenv";
 import express from "express";
+// Import routes
+import userRoutes from "./routes/User.js";
 import connectDB from "./utils/db.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(express.json());
+
+// Using routes
+app.use("/api", userRoutes);
 
 connectDB();
 
