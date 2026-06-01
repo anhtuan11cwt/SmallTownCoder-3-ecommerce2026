@@ -1,0 +1,31 @@
+{
+  "author": "Trần Anh Tuấn",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.3"
+  },
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
+    "nodemon": "^3.1.14"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "backend",
+  "scripts": {
+    "check": "biome check --write",
+    "check2": "biome check --write --unsafe",
+    "dev": "nodemon index.js",
+    "format": "biome format --write",
+    "lint": "eslint .",
+    "lint2": "biome lint --write",
+    "predev": "npx kill-port 5000",
+    "start": "node index.js"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}
