@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 // Import routes
+import productRoutes from "./routes/product.js";
 import userRoutes from "./routes/User.js";
 import connectDB from "./utils/db.js";
 import "./config/cloudinary.js";
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // Using routes
 app.use("/api", userRoutes);
+app.use("/api", productRoutes);
 
 connectDB();
 
