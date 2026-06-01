@@ -11,12 +11,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCartData } from "@/context/use-cart-data";
 import { useUserData } from "@/context/use-user-data";
 
 const Navbar = () => {
   const { isAuth, logoutUser } = useUserData();
+  const { totalItem, setTotalItem } = useCartData();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    setTotalItem(0);
+    logoutUser(navigate);
+  };
 
   const navItems = [
     { label: "Trang Chủ", path: "/" },
@@ -60,7 +67,7 @@ const Navbar = () => {
             >
               <ShoppingCart className="h-6 w-6" />
               <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                5
+                {totalItem}
               </span>
             </button>
           </li>
@@ -104,7 +111,7 @@ const Navbar = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={() => logoutUser(navigate)}
+                      onClick={handleLogout}
                     >
                       Đăng Xuất
                     </DropdownMenuItem>
@@ -130,7 +137,7 @@ const Navbar = () => {
           >
             <ShoppingCart className="h-5 w-5" />
             <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-              5
+              {totalItem}
             </span>
           </button>
 
@@ -171,7 +178,7 @@ const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={() => logoutUser(navigate)}
+                    onClick={handleLogout}
                   >
                     Đăng Xuất
                   </DropdownMenuItem>

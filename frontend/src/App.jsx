@@ -8,6 +8,8 @@ import { useUserData } from "@/context/use-user-data";
 import Cart from "@/pages/Cart";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import NotFound from "@/pages/NotFound";
+import ProductPage from "@/pages/ProductPage";
 import Products from "@/pages/Products";
 import Verify from "@/pages/Verify";
 
@@ -25,10 +27,12 @@ function App() {
           <Route element={isAuth ? <Home /> : <Login />} path="/login" />
           <Route element={isAuth ? <Home /> : <Verify />} path="/verify" />
           <Route element={<Products />} path="/products" />
+          <Route element={<ProductPage />} path="/product/:id" />
           <Route
             element={isAuth ? <Cart /> : <Navigate to="/login" />}
             path="/cart"
           />
+          <Route element={<NotFound />} path="*" />
         </Routes>
       </main>
       <Footer />

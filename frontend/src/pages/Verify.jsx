@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useCartData } from "@/context/use-cart-data";
 import { useUserData } from "@/context/use-user-data";
 
 const Verify = () => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(90);
   const { btnLoading, verifyUser, loginUser } = useUserData();
+  const { fetchCart } = useCartData();
   const navigate = useNavigate();
   const canResend = timer === 0;
 
@@ -36,9 +38,10 @@ const Verify = () => {
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    verifyUser(Number(otp), navigate);
+    await verifyUser(Number(otp), navigate);
+    fetchCart();
   };
 
   const handleResend = async () => {

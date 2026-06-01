@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ProductContext } from "@/context/product-context";
 
@@ -15,6 +15,8 @@ export const ProductProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [product, setProduct] = useState([]);
+  const [relatedProduct, setRelatedProduct] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,6 +43,19 @@ export const ProductProvider = ({ children }) => {
     void fetchProducts();
   }, [search, category, price, page]);
 
+  const fetchProduct = useCallback(async (id) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`${SERVER}/api/product/${id}`);
+      setProduct(data.product);
+      setRelatedProduct(data.relatedProducts);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   function clearFilters() {
     setSearch("");
     setCategory("");
@@ -54,11 +69,14 @@ export const ProductProvider = ({ children }) => {
         categories,
         category,
         clearFilters,
+        fetchProduct,
         loading,
         newProd,
         page,
         price,
+        product,
         products,
+        relatedProduct,
         search,
         setCategory,
         setLoading,

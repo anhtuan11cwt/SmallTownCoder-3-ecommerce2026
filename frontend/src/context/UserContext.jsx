@@ -1,13 +1,15 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import { CartContext } from "@/context/cart-context";
 import { UserContext } from "@/context/user-context";
 
 const SERVER = import.meta.env.VITE_SERVER_URL;
 
 export const UserProvider = ({ children }) => {
+  const { fetchCart } = useContext(CartContext);
   const [user, setUser] = useState([]);
   const [btnLoading, setBtnLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(() => !!localStorage.getItem("token"));
@@ -22,7 +24,7 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const { data } = await axios.get(`${SERVER}/api/user/me`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { token },
         });
         setIsAuth(true);
         setUser(data.user);
@@ -68,6 +70,7 @@ export const UserProvider = ({ children }) => {
         path: "/",
         secure: location.protocol === "https:",
       });
+      fetchCart();
       navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
