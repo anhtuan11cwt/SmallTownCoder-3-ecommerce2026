@@ -7,6 +7,7 @@ import cartRoutes from "./routes/cart.js";
 import orderRoutes from "./routes/order.js";
 import productRoutes from "./routes/product.js";
 import userRoutes from "./routes/User.js";
+import seedProducts from "./seeds/seedProducts.js";
 import connectDB from "./utils/db.js";
 import "./config/cloudinary.js";
 
@@ -26,7 +27,9 @@ app.use("/api", cartRoutes);
 app.use("/api", addressRoutes);
 app.use("/api", orderRoutes);
 
-connectDB();
+connectDB().then(() => {
+  seedProducts();
+});
 
 app.listen(port, () => {
   console.log(`Máy chủ đang chạy tại http://localhost:${port}`);
