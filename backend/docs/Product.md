@@ -89,6 +89,109 @@
   }
   ```
 
+### 3. Lấy chi tiết sản phẩm
+- **Method:** GET
+- **URL:** `http://localhost:5000/api/product/:id`
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "product": { ... },
+    "relatedProducts": [...]
+  }
+  ```
+- **Error (404 - Không tìm thấy):**
+  ```json
+  {
+    "message": "Không tìm thấy sản phẩm"
+  }
+  ```
+
+### 4. Cập nhật thông tin sản phẩm
+- **Method:** PUT
+- **URL:** `http://localhost:5000/api/product/:id`
+
+#### Headers
+- **Key:** `token`
+- **Value:** `ADMIN_JWT_TOKEN`
+- **Required:** Có
+
+#### Body
+- **Format:** Raw JSON
+- **Content:**
+  ```json
+  {
+    "title": "Tên mới",
+    "about": "Mô tả mới",
+    "price": 2000000,
+    "stock": 5,
+    "category": "Điện tử"
+  }
+  ```
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "message": "Sản phẩm đã được cập nhật",
+    "updatedProduct": { ... }
+  }
+  ```
+- **Error (401 - Không phải Admin):**
+  ```json
+  {
+    "message": "Bạn không phải là admin"
+  }
+  ```
+- **Error (404 - Không tìm thấy):**
+  ```json
+  {
+    "message": "Không tìm thấy sản phẩm"
+  }
+  ```
+
+### 5. Cập nhật hình ảnh sản phẩm
+- **Method:** POST
+- **URL:** `http://localhost:5000/api/product/image/:id`
+
+#### Headers
+- **Key:** `token`
+- **Value:** `ADMIN_JWT_TOKEN`
+- **Required:** Có
+
+#### Body
+- **Format:** FormData
+- **Fields:**
+  - `files` (file): Danh sách tệp hình ảnh sản phẩm mới
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "message": "Hình ảnh đã được cập nhật",
+    "product": { ... }
+  }
+  ```
+- **Error (401 - Không phải Admin):**
+  ```json
+  {
+    "message": "Bạn không phải là admin"
+  }
+  ```
+- **Error (400 - Thiếu tệp ảnh):**
+  ```json
+  {
+    "message": "Không có tệp nào để tải lên"
+  }
+  ```
+- **Error (404 - Không tìm thấy):**
+  ```json
+  {
+    "message": "Không tìm thấy sản phẩm"
+  }
+  ```
+
 ---
 ## Test Cases
 - **Test Case:** Tạo sản phẩm thành công (Admin)
@@ -102,3 +205,27 @@
 - **Test Case:** Lấy danh sách sản phẩm thành công
   - **Input:** Không có query hoặc có query lọc
   - **Expected Result:** 200 + danh sách sản phẩm + phân trang + danh mục
+
+- **Test Case:** Lấy chi tiết sản phẩm thành công
+  - **Input:** ID sản phẩm hợp lệ
+  - **Expected Result:** 200 + thông tin sản phẩm + sản phẩm liên quan
+
+- **Test Case:** Lấy chi tiết sản phẩm thất bại
+  - **Input:** ID sản phẩm không tồn tại
+  - **Expected Result:** 404 + "Không tìm thấy sản phẩm"
+
+- **Test Case:** Cập nhật thông tin sản phẩm thành công (Admin)
+  - **Input:** Token admin, ID sản phẩm hợp lệ, body hợp lệ
+  - **Expected Result:** 200 + thông tin sản phẩm đã cập nhật
+
+- **Test Case:** Cập nhật thông tin sản phẩm thất bại (User thường)
+  - **Input:** Token user thường, ID sản phẩm hợp lệ
+  - **Expected Result:** 401 + "Bạn không phải là admin"
+
+- **Test Case:** Cập nhật hình ảnh sản phẩm thành công (Admin)
+  - **Input:** Token admin, ID sản phẩm hợp lệ, có file ảnh mới
+  - **Expected Result:** 200 + thông tin sản phẩm với hình ảnh mới
+
+- **Test Case:** Cập nhật hình ảnh sản phẩm thất bại (Thiếu tệp)
+  - **Input:** Token admin, ID sản phẩm hợp lệ, không có file ảnh
+  - **Expected Result:** 400 + "Không có tệp nào để tải lên"
