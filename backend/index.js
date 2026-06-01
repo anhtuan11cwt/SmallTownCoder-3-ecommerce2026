@@ -3,6 +3,7 @@ import express from "express";
 // Import routes
 import userRoutes from "./routes/User.js";
 import connectDB from "./utils/db.js";
+import "./config/cloudinary.js";
 
 dotenv.config();
 

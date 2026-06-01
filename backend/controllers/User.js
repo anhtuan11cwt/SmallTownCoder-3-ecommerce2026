@@ -46,3 +46,9 @@ export const verifyUser = tryCatch(async (req, res) => {
   await haveOtp.deleteOne();
   res.json({ message: "Đăng nhập thành công", token, user });
 });
+
+export const myProfile = tryCatch(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  res.json(user);
+});

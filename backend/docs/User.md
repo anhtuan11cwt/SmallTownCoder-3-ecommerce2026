@@ -109,6 +109,34 @@
   }
   ```
 
+### 3. Xem thông tin cá nhân
+- **Method:** GET
+- **URL:** `http://localhost:5000/api/user/me`
+
+#### Headers
+- **Key:** `token`
+- **Value:** `JWT_TOKEN`
+- **Required:** Có
+- **Description:** Token xác thực người dùng
+- **Authorization Headers:** Yêu cầu (Token trong header)
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "_id": "60d5ec49f1b2c51f3c8e4d2a",
+    "email": "example@gmail.com",
+    "createdAt": "2026-05-29T15:56:00.000Z",
+    "updatedAt": "2026-05-29T16:00:00.000Z"
+  }
+  ```
+- **Error (403 - Chưa đăng nhập):**
+  ```json
+  {
+    "message": "Vui lòng đăng nhập"
+  }
+  ```
+
 ---
 ## Test Cases
 - **Test Case:** Gửi OTP thành công
@@ -134,3 +162,11 @@
 - **Test Case:** OTP đã hết hạn
   - **Input:** Email hợp lệ, OTP đã hết hạn
   - **Expected Result:** 400 + "Mã OTP đã hết hạn"
+
+- **Test Case:** Xem thông tin cá nhân thành công
+  - **Input:** Token hợp lệ
+  - **Expected Result:** 200 + thông tin user
+
+- **Test Case:** Xem thông tin cá nhân thất bại (chưa đăng nhập)
+  - **Input:** Không có token hoặc token không hợp lệ
+  - **Expected Result:** 403 + "Vui lòng đăng nhập"
