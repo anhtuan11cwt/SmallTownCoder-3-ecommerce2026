@@ -1,10 +1,11 @@
 import "./App.css";
 import { Toaster } from "react-hot-toast";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
 import { useUserData } from "@/context/use-user-data";
+import Cart from "@/pages/Cart";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Products from "@/pages/Products";
@@ -24,6 +25,10 @@ function App() {
           <Route element={isAuth ? <Home /> : <Login />} path="/login" />
           <Route element={isAuth ? <Home /> : <Verify />} path="/verify" />
           <Route element={<Products />} path="/products" />
+          <Route
+            element={isAuth ? <Cart /> : <Navigate to="/login" />}
+            path="/cart"
+          />
         </Routes>
       </main>
       <Footer />

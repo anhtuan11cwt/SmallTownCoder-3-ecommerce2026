@@ -9,7 +9,7 @@ const Hero = () => {
       className="relative flex min-h-[calc(100vh-64px)] items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/bg-image.jpg')",
+          "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('/bg-image.jpg')",
       }}
     >
       <div className="px-4 text-center text-white">

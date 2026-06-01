@@ -104,7 +104,7 @@ const Navbar = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer"
-                      onClick={logoutUser}
+                      onClick={() => logoutUser(navigate)}
                     >
                       Đăng Xuất
                     </DropdownMenuItem>
@@ -145,14 +145,14 @@ const Navbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              <DropdownMenuLabel>Tài Khoản</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {!isAuth ? (
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={() => navigate("/login")}
                 >
-                  Login
+                  Đăng Nhập
                 </DropdownMenuItem>
               ) : (
                 <>
@@ -160,20 +160,20 @@ const Navbar = () => {
                     className="cursor-pointer"
                     onClick={() => navigate("/orders")}
                   >
-                    Your Orders
+                    Đơn Hàng
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => navigate("/dashboard")}
                   >
-                    Dashboard
+                    Bảng Điều Khiển
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={logoutUser}
+                    onClick={() => logoutUser(navigate)}
                   >
-                    Logout
+                    Đăng Xuất
                   </DropdownMenuItem>
                 </>
               )}
