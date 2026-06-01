@@ -23,6 +23,7 @@
   "main": "index.js",
   "name": "backend",
   "scripts": {
+    "build": "node index.js",
     "check": "biome check --write",
     "check2": "biome check --write --unsafe",
     "dev": "nodemon index.js",

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 // Import routes
+import cartRoutes from "./routes/cart.js";
 import productRoutes from "./routes/product.js";
 import userRoutes from "./routes/User.js";
 import connectDB from "./utils/db.js";
@@ -17,6 +18,7 @@ app.use(express.json());
 // Using routes
 app.use("/api", userRoutes);
 app.use("/api", productRoutes);
+app.use("/api", cartRoutes);
 
 connectDB();
 
