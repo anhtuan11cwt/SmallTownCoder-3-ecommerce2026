@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ProductProvider } from "@/context/ProductContext";
 import { UserProvider } from "@/context/UserContext";
 import App from "./App.jsx";
 
@@ -11,7 +12,9 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <UserProvider>
-          <App />
+          <ProductProvider>
+            <App />
+          </ProductProvider>
         </UserProvider>
       </ThemeProvider>
     </BrowserRouter>

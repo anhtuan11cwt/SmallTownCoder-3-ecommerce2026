@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { UserContext } from "@/context/user-context";
@@ -11,6 +11,30 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState([]);
   const [btnLoading, setBtnLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(() => !!localStorage.getItem("token"));
+  const [loading, setLoading] = useState(() => !!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        const { data } = await axios.get(`${SERVER}/api/user/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsAuth(true);
+        setUser(data.user);
+      } catch {
+        setUser([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void fetchUser();
+  }, []);
 
   async function loginUser(email, navigate) {
     setBtnLoading(true);
@@ -68,6 +92,7 @@ export const UserProvider = ({ children }) => {
       value={{
         btnLoading,
         isAuth,
+        loading,
         loginUser,
         logoutUser,
         user,
