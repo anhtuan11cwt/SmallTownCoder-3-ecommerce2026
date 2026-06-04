@@ -131,4 +131,12 @@
   html {
     @apply font-sans;
   }
+
+  /* Hide scrollbar but keep scroll functionality */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
 }

@@ -81,7 +81,7 @@ const OrderPage = () => {
   }
 
   return (
-    <div className="mx-auto px-4 py-8 container">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-6 md:py-8">
       <Card className="mb-6">
         <CardHeader className="flex flex-row justify-between items-center">
           <CardTitle className="font-bold text-2xl">

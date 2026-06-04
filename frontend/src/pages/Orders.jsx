@@ -60,7 +60,7 @@ const Orders = () => {
   }
 
   return (
-    <div className="mx-auto px-4 py-8 container">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-6 md:py-8">
       <h1 className="mb-6 font-bold text-3xl text-center">Đơn hàng của bạn</h1>
       <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {orders.map((order) => (

@@ -38,7 +38,7 @@ const ProductPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-6 md:py-8">
       {product && (
         <>
           {/* Breadcrumb */}
@@ -61,6 +61,19 @@ const ProductPage = () => {
                   Sản phẩm
                 </Link>
               </li>
+              {product.category && (
+                <>
+                  <li aria-hidden="true">/</li>
+                  <li>
+                    <Link
+                      className="hover:text-foreground transition-colors"
+                      to={`/products?category=${encodeURIComponent(product.category)}`}
+                    >
+                      {product.category}
+                    </Link>
+                  </li>
+                </>
+              )}
               <li aria-hidden="true">/</li>
               <li className="text-foreground font-medium truncate max-w-[200px]">
                 {product.title}

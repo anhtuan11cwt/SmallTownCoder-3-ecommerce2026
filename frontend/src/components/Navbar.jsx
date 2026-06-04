@@ -1,6 +1,17 @@
-import { LogIn, Menu, ShoppingCart, User, X } from "lucide-react";
+import {
+  ClipboardList,
+  Home,
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Menu,
+  Package,
+  ShoppingCart,
+  User,
+  X,
+} from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +25,74 @@ import {
 import { useCartData } from "@/context/use-cart-data";
 import { useUserData } from "@/context/use-user-data";
 
+const NAV_ITEMS = [
+  { icon: Home, label: "Trang Chủ", path: "/" },
+  { icon: Package, label: "Sản Phẩm", path: "/products" },
+  { icon: ShoppingCart, label: "Giỏ Hàng", path: "/cart" },
+];
+
+const AuthMenu = ({ isAuth, user, onNavigate, onLogout }) => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button
+        aria-label="Tài khoản"
+        className="cursor-pointer"
+        size="icon"
+        variant="ghost"
+      >
+        {isAuth ? <User className="size-5" /> : <LogIn className="size-5" />}
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end" className="min-w-[180px]">
+      <DropdownMenuLabel>
+        {isAuth ? user?.fullName || user?.email || "Tài Khoản" : "Tài Khoản"}
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      {!isAuth ? (
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => onNavigate("/login")}
+        >
+          <LogIn className="mr-2 size-4" />
+          Đăng Nhập
+        </DropdownMenuItem>
+      ) : (
+        <>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => onNavigate("/orders")}
+          >
+            <ClipboardList className="mr-2 size-4" />
+            Đơn Hàng
+          </DropdownMenuItem>
+          {user?.role === "admin" && (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => onNavigate("/admin/dashboard")}
+            >
+              <LayoutDashboard className="mr-2 size-4" />
+              Dashboard
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+            onClick={onLogout}
+          >
+            <LogOut className="mr-2 size-4" />
+            Đăng Xuất
+          </DropdownMenuItem>
+        </>
+      )}
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
 const Navbar = () => {
   const { isAuth, logoutUser, user } = useUserData();
   const { totalItem, setTotalItem } = useCartData();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -26,210 +101,160 @@ const Navbar = () => {
     logoutUser(navigate, redirectTo);
   };
 
-  const navItems = [
-    { label: "Trang Chủ", path: "/" },
-    { label: "Sản Phẩm", path: "/products" },
-    { label: "Giỏ Hàng", path: "/cart" },
-  ];
+  const handleNav = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
+
+  const isActive = (path) => location.pathname === path;
+
+  const cartLabel = `Giỏ hàng (${totalItem} sản phẩm)`;
+  const badgeContent = totalItem > 99 ? "99+" : totalItem;
 
   return (
-    <nav className="print:hidden fixed top-0 left-0 z-50 bg-background/50 supports-[backdrop-filter]:bg-background/60 backdrop-blur border-b w-full">
-      <div className="flex justify-between items-center mx-auto px-4 py-3 container">
+    <nav className="print:hidden fixed top-0 left-0 z-50 w-full border-b bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto flex h-14 sm:h-16 items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32">
         {/* Brand */}
         <button
-          className="font-bold text-2xl"
+          className="flex shrink-0 items-center gap-2 font-bold text-xl sm:text-2xl tracking-tight transition-[opacity,transform] duration-200 ease-out hover:opacity-80 active:scale-[0.98] motion-reduce:transition-none"
           onClick={() => navigate("/")}
           type="button"
         >
           QuickCart
         </button>
 
-        {/* Desktop Menu */}
-        <ul className="hidden sm:flex items-center space-x-6">
-          {navItems.map((item) => (
-            <li key={item.path}>
+        {/* Desktop Nav */}
+        <ul className="hidden sm:flex items-center gap-1">
+          {NAV_ITEMS.map(({ label, path, icon: Icon }) => (
+            <li key={path}>
               <button
-                className="font-medium hover:text-primary text-sm transition-colors"
-                onClick={() => navigate(item.path)}
+                aria-current={isActive(path) ? "page" : undefined}
+                className={`relative inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.97] motion-reduce:transition-none ${
+                  isActive(path)
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                }`}
+                onClick={() => navigate(path)}
                 type="button"
               >
-                {item.label}
+                <Icon className="size-4 shrink-0" />
+                {label}
               </button>
             </li>
           ))}
 
           {/* Cart Badge */}
-          <li>
-            <button
-              aria-label="Xem giỏ hàng"
-              className="relative flex items-center"
+          <li className="ml-1">
+            <Button
+              aria-label={cartLabel}
+              className="relative cursor-pointer"
               onClick={() => navigate("/cart")}
-              type="button"
+              size="icon"
+              variant="ghost"
             >
-              <ShoppingCart className="w-6 h-6" />
-              <span className="-top-2 -right-2 absolute flex justify-center items-center bg-red-500 rounded-full w-5 h-5 font-bold text-white text-xs">
-                {totalItem}
-              </span>
-            </button>
+              <ShoppingCart className="size-5" />
+              {totalItem > 0 && (
+                <span className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-primary px-1 py-px text-[11px] font-semibold leading-none text-primary-foreground">
+                  {badgeContent}
+                </span>
+              )}
+            </Button>
           </li>
 
-          {/* Auth Dropdown */}
+          {/* Auth + Theme */}
           <li>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="cursor-pointer" size="icon" variant="ghost">
-                  {isAuth ? (
-                    <User className="w-5 h-5" />
-                  ) : (
-                    <LogIn className="w-5 h-5" />
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Tài Khoản</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {!isAuth ? (
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/login")}
-                  >
-                    Đăng Nhập
-                  </DropdownMenuItem>
-                ) : (
-                  <>
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={() => navigate("/orders")}
-                    >
-                      Đơn Hàng
-                    </DropdownMenuItem>
-                    {user?.role === "admin" && (
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => navigate("/admin/dashboard")}
-                      >
-                        Dashboard
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={handleLogout}
-                    >
-                      Đăng Xuất
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AuthMenu
+              isAuth={isAuth}
+              onLogout={handleLogout}
+              onNavigate={navigate}
+              user={user}
+            />
           </li>
-
-          {/* Mode Toggle */}
           <li>
             <ModeToggle />
           </li>
         </ul>
 
-        {/* Mobile: Cart + Auth + Toggle + Hamburger */}
-        <div className="sm:hidden flex items-center gap-2">
-          <button
-            aria-label="View cart"
-            className="relative flex items-center"
-            onClick={() => navigate("/cart")}
-            type="button"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span className="-top-2 -right-2 absolute flex justify-center items-center bg-red-500 rounded-full w-4 h-4 font-bold text-[10px] text-white">
-              {totalItem}
-            </span>
-          </button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="cursor-pointer" size="icon" variant="ghost">
-                {isAuth ? (
-                  <User className="w-5 h-5" />
-                ) : (
-                  <LogIn className="w-5 h-5" />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Tài Khoản</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {!isAuth ? (
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => navigate("/login")}
-                >
-                  Đăng Nhập
-                </DropdownMenuItem>
-              ) : (
-                <>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/orders")}
-                  >
-                    Đơn Hàng
-                  </DropdownMenuItem>
-                  {user?.role === "admin" && (
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={() => navigate("/admin/dashboard")}
-                    >
-                      Dashboard
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={handleLogout}
-                  >
-                    Đăng Xuất
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <ModeToggle />
-
+        {/* Mobile Actions */}
+        <div className="flex sm:hidden items-center gap-0.5">
           <Button
+            aria-label={cartLabel}
+            className="relative cursor-pointer"
+            onClick={() => navigate("/cart")}
+            size="icon"
+            variant="ghost"
+          >
+            <ShoppingCart className="size-5" />
+            {totalItem > 0 && (
+              <span className="absolute -right-1 -top-1 flex min-w-[18px] items-center justify-center rounded-full bg-primary px-1 py-px text-[11px] font-semibold leading-none text-primary-foreground">
+                {badgeContent}
+              </span>
+            )}
+          </Button>
+          <ModeToggle />
+          <Button
+            aria-controls="mobile-menu"
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? "Đóng menu" : "Mở menu"}
             className="cursor-pointer"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
             size="icon"
             variant="ghost"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X className="size-5" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="size-5" />
             )}
           </Button>
         </div>
       </div>
 
       {/* Mobile Slide-down Menu */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden bg-background/95 backdrop-blur border-t">
-          <ul className="flex flex-col space-y-1 px-4 py-3">
-            {navItems.map((item) => (
-              <li key={item.path}>
-                <button
-                  className="hover:bg-accent px-3 py-2 rounded-md w-full font-medium text-sm text-left transition-colors hover:text-accent-foreground"
-                  onClick={() => {
-                    navigate(item.path);
-                    setMobileMenuOpen(false);
-                  }}
-                  type="button"
-                >
-                  {item.label}
-                </button>
-              </li>
+      <div
+        className={`overflow-hidden transition-all duration-250 ease-out motion-reduce:transition-none ${
+          mobileMenuOpen
+            ? "max-h-[400px] opacity-100"
+            : "max-h-0 opacity-0 pointer-events-none"
+        }`}
+        id="mobile-menu"
+      >
+        <div className="border-t bg-background/95 backdrop-blur-xl">
+          <div className="px-4 py-3 space-y-1">
+            {NAV_ITEMS.map(({ label, path, icon: Icon }) => (
+              <button
+                aria-current={isActive(path) ? "page" : undefined}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out hover:bg-accent hover:text-accent-foreground active:scale-[0.98] motion-reduce:transition-none ${
+                  isActive(path)
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                }`}
+                key={path}
+                onClick={() => handleNav(path)}
+                type="button"
+              >
+                <Icon className="size-5 shrink-0" />
+                {label}
+              </button>
             ))}
-          </ul>
+          </div>
+
+          {/* Mobile Auth Footer */}
+          <div className="border-t px-4 py-3">
+            <div className="flex items-center gap-3">
+              <AuthMenu
+                isAuth={isAuth}
+                onLogout={handleLogout}
+                onNavigate={navigate}
+                user={user}
+              />
+              <span className="text-sm font-medium text-muted-foreground">
+                {isAuth ? user?.fullName || user?.email : "Tài khoản"}
+              </span>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };

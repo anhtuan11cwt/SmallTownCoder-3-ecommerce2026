@@ -10,7 +10,7 @@ const Home = () => {
     <div>
       <Hero />
 
-      <section className="container mx-auto px-4 py-8">
+      <section className="px-6 md:px-16 lg:px-24 xl:px-32 py-8">
         <h2 className="mb-6 text-2xl font-bold">Sản Phẩm Mới Nhất</h2>
 
         {loading ? (

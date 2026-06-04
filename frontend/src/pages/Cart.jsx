@@ -17,7 +17,7 @@ const Cart = () => {
   if (!cart) return <Loading />;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-8">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-32 py-6 md:py-8">
       <h1 className="mb-8 text-center text-3xl font-bold">Giỏ Hàng</h1>
 
       {cart.length === 0 ? (

@@ -56,63 +56,81 @@ const InstagramIcon = ({ title = "Instagram", ...props }) => (
 
 const Footer = () => {
   return (
-    <footer className="w-full mt-auto print:hidden">
-      <hr className="border border-gray-300 dark:border-gray-700" />
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Brand */}
-          <div className="mb-6 md:mb-0 text-center md:text-left">
-            <h2 className="text-xl font-bold">QuickCart</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Gian hàng một điểm đến cho mọi nhu cầu của bạn
-            </p>
-          </div>
-
-          {/* Links */}
-          <div className="flex flex-wrap justify-center md:justify-end gap-4">
-            <a className="text-sm hover:underline" href="/about">
-              Về Chúng Tôi
-            </a>
-            <a className="text-sm hover:underline" href="/contact">
-              Liên Hệ
-            </a>
-            <a className="text-sm hover:underline" href="/privacy">
-              Chính Sách Bảo Mật
-            </a>
-            <a className="text-sm hover:underline" href="/terms">
-              Điều Khoản & Điều Kiện
-            </a>
-          </div>
+    <footer className="w-full mt-auto print:hidden px-6 md:px-16 lg:px-24 xl:px-32">
+      <hr className="border border-border" />
+      <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 text-muted-foreground">
+        {/* Brand */}
+        <div className="max-w-[410px]">
+          <h2 className="text-xl font-bold text-foreground">QuickCart</h2>
+          <p className="text-sm mt-4">
+            Gian hàng một điểm đến cho mọi nhu cầu của bạn
+          </p>
         </div>
 
-        {/* Social */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground"> Theo Dõi</p>
-          <div className="flex justify-center gap-4 mt-2">
-            <a
-              aria-label="Facebook"
-              className="hover:opacity-75 transition-opacity"
-              href="https://facebook.com"
-            >
-              <FacebookIcon />
-            </a>
-            <a
-              aria-label="Twitter"
-              className="hover:opacity-75 transition-opacity"
-              href="https://x.com"
-            >
-              <TwitterIcon />
-            </a>
-            <a
-              aria-label="Instagram"
-              className="hover:opacity-75 transition-opacity"
-              href="https://instagram.com"
-            >
-              <InstagramIcon />
-            </a>
+        {/* Links */}
+        <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
+          <div>
+            <h3 className="font-semibold text-base text-foreground md:mb-5 mb-2">
+              Liên Kết
+            </h3>
+            <ul className="text-sm space-y-1.5">
+              <li>
+                <a className="hover:underline transition" href="/about">
+                  Về Chúng Tôi
+                </a>
+              </li>
+              <li>
+                <a className="hover:underline transition" href="/contact">
+                  Liên Hệ
+                </a>
+              </li>
+              <li>
+                <a className="hover:underline transition" href="/privacy">
+                  Chính Sách Bảo Mật
+                </a>
+              </li>
+              <li>
+                <a className="hover:underline transition" href="/terms">
+                  Điều Khoản
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-base text-foreground md:mb-5 mb-2">
+              Theo Dõi
+            </h3>
+            <div className="flex gap-3 mt-2 md:mt-0">
+              <a
+                aria-label="Facebook"
+                className="hover:text-foreground transition-colors"
+                href="https://facebook.com"
+              >
+                <FacebookIcon />
+              </a>
+              <a
+                aria-label="Twitter"
+                className="hover:text-foreground transition-colors"
+                href="https://x.com"
+              >
+                <TwitterIcon />
+              </a>
+              <a
+                aria-label="Instagram"
+                className="hover:text-foreground transition-colors"
+                href="https://instagram.com"
+              >
+                <InstagramIcon />
+              </a>
+            </div>
           </div>
         </div>
       </div>
+
+      <hr className="border border-border" />
+      <p className="py-4 text-center text-sm text-muted-foreground/80">
+        &copy; {new Date().getFullYear()} QuickCart. Tất cả quyền được bảo lưu.
+      </p>
     </footer>
   );
 };
