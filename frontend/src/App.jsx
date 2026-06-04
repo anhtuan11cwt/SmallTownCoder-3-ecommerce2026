@@ -4,7 +4,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { useUserData } from "@/context/use-user-data";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminLogin from "@/pages/AdminLogin";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Home from "@/pages/Home";
@@ -18,51 +21,154 @@ import ProductPage from "@/pages/ProductPage";
 import Products from "@/pages/Products";
 import Verify from "@/pages/Verify";
 
+// Chặn admin truy cập các trang dành cho user thường
+const UserOnlyRoute = ({ children }) => {
+  const { isAuth, loading, user } = useUserData();
+  if (loading) return <Loading />;
+  if (isAuth && user?.role === "admin")
+    return <Navigate to="/admin/dashboard" />;
+  return children;
+};
+
+// Layout có Navbar + Footer (dành cho user)
+const UserLayout = ({ children }) => (
+  <div className="flex flex-col min-h-dvh">
+    <Navbar />
+    <main className="flex-1">{children}</main>
+    <Footer />
+  </div>
+);
+
 function App() {
-  const { isAuth, loading } = useUserData();
+  const { loading } = useUserData();
 
   if (loading) return <Loading />;
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Routes>
-          <Route element={<Home />} path="/" />
-          <Route element={isAuth ? <Home /> : <Login />} path="/login" />
-          <Route element={isAuth ? <Home /> : <Verify />} path="/verify" />
-          <Route element={<Products />} path="/products" />
-          <Route element={<ProductPage />} path="/product/:id" />
-          <Route
-            element={isAuth ? <Orders /> : <Navigate to="/login" />}
-            path="/orders"
-          />
-          <Route
-            element={isAuth ? <OrderPage /> : <Navigate to="/login" />}
-            path="/order/:id"
-          />
-          <Route
-            element={isAuth ? <Cart /> : <Navigate to="/login" />}
-            path="/cart"
-          />
-          <Route
-            element={isAuth ? <Checkout /> : <Navigate to="/login" />}
-            path="/checkout"
-          />
-          <Route
-            element={isAuth ? <Payment /> : <Navigate to="/login" />}
-            path="/payment/:id"
-          />
-          <Route
-            element={isAuth ? <OrderProcessing /> : <Navigate to="/login" />}
-            path="/order/success"
-          />
-          <Route element={<NotFound />} path="*" />
-        </Routes>
-      </main>
-      <Footer />
+    <>
+      <Routes>
+        {/* Routes dành cho user — có Navbar + Footer */}
+        <Route
+          element={
+            <UserLayout>
+              <Routes>
+                <Route
+                  element={
+                    <UserOnlyRoute>
+                      <Home />
+                    </UserOnlyRoute>
+                  }
+                  path="/"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute publicOnly>
+                      <Login />
+                    </ProtectedRoute>
+                  }
+                  path="/login"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute publicOnly>
+                      <Verify />
+                    </ProtectedRoute>
+                  }
+                  path="/verify"
+                />
+                <Route
+                  element={
+                    <UserOnlyRoute>
+                      <Products />
+                    </UserOnlyRoute>
+                  }
+                  path="/products"
+                />
+                <Route
+                  element={
+                    <UserOnlyRoute>
+                      <ProductPage />
+                    </UserOnlyRoute>
+                  }
+                  path="/product/:id"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Orders />
+                    </ProtectedRoute>
+                  }
+                  path="/orders"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <OrderPage />
+                    </ProtectedRoute>
+                  }
+                  path="/order/:id"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Cart />
+                    </ProtectedRoute>
+                  }
+                  path="/cart"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Checkout />
+                    </ProtectedRoute>
+                  }
+                  path="/checkout"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Payment />
+                    </ProtectedRoute>
+                  }
+                  path="/payment/:id"
+                />
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <OrderProcessing />
+                    </ProtectedRoute>
+                  }
+                  path="/order/success"
+                />
+                <Route element={<NotFound />} path="*" />
+              </Routes>
+            </UserLayout>
+          }
+          path="/*"
+        />
+
+        {/* Routes dành cho admin — không có Navbar + Footer */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+          path="/admin/dashboard"
+        />
+        <Route
+          element={
+            <ProtectedRoute publicOnly>
+              <AdminLogin />
+            </ProtectedRoute>
+          }
+          path="/admin/login"
+        />
+        <Route element={<Navigate to="/admin/dashboard" />} path="/admin/*" />
+      </Routes>
+
       <Toaster position="top-right" />
-    </div>
+    </>
   );
 }
 

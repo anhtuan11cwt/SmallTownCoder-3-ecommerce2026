@@ -29,6 +29,9 @@ export const UserProvider = ({ children }) => {
         setIsAuth(true);
         setUser(data.user);
       } catch {
+        localStorage.removeItem("token");
+        Cookies.remove("token", { path: "/" });
+        setIsAuth(false);
         setUser([]);
       } finally {
         setLoading(false);
@@ -47,6 +50,34 @@ export const UserProvider = ({ children }) => {
       navigate("/verify");
     } catch (error) {
       toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
+    } finally {
+      setBtnLoading(false);
+    }
+  }
+
+  async function loginAdmin(email, password, navigate) {
+    setBtnLoading(true);
+    try {
+      const { data } = await axios.post(`${SERVER}/api/user/admin/login`, {
+        email,
+        password,
+      });
+      toast.success("Đăng nhập Admin thành công");
+      localStorage.setItem("token", data.token);
+      Cookies.set("token", data.token, {
+        expires: 15,
+        path: "/",
+        secure: location.protocol === "https:",
+      });
+      setIsAuth(true);
+      setUser(data.user);
+      navigate("/admin/dashboard");
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Email hoặc mật khẩu không đúng";
+      toast.error(message);
+      // eslint rule: require { cause } when throwing the caught error
+      throw new Error(message, { cause: error });
     } finally {
       setBtnLoading(false);
     }
@@ -97,6 +128,7 @@ export const UserProvider = ({ children }) => {
         btnLoading,
         isAuth,
         loading,
+        loginAdmin,
         loginUser,
         logoutUser,
         user,

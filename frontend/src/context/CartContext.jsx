@@ -73,8 +73,10 @@ export const CartProvider = ({ children }) => {
     let ignore = false;
 
     const loadCart = async () => {
+      const token = Cookies.get("token") || localStorage.getItem("token");
+      if (!token) return; // Không fetch nếu không có token
+
       try {
-        const token = Cookies.get("token") || localStorage.getItem("token");
         const { data } = await axios.get(`${SERVER}/api/cart/all`, {
           headers: { token },
         });
