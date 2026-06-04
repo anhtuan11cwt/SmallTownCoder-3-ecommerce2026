@@ -49,10 +49,10 @@ function PaginationLink({ className, isActive, size = "icon", ...props }) {
   );
 }
 
-function PaginationPrevious({ className, text = "Previous", ...props }) {
+function PaginationPrevious({ className, text = "Trước", ...props }) {
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label="Đến trang trước"
       className={cn("pl-2!", className)}
       size="default"
       {...props}
@@ -63,10 +63,10 @@ function PaginationPrevious({ className, text = "Previous", ...props }) {
   );
 }
 
-function PaginationNext({ className, text = "Next", ...props }) {
+function PaginationNext({ className, text = "Sau", ...props }) {
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label="Đến trang sau"
       className={cn("pr-2!", className)}
       size="default"
       {...props}

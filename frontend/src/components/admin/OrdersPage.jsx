@@ -1,5 +1,5 @@
 const OrdersPage = () => {
-  return <div>OrdersPage Component (Quản lý đơn hàng)</div>;
+  return <div>Trang đơn hàng (Quản lý đơn hàng)</div>;
 };
 
 export default OrdersPage;

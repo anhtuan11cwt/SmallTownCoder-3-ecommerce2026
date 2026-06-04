@@ -32,7 +32,7 @@ const UserOnlyRoute = ({ children }) => {
 
 // Layout có Navbar + Footer (dành cho user)
 const UserLayout = ({ children }) => (
-  <div className="flex flex-col min-h-dvh">
+  <div className="flex flex-col min-h-dvh pt-16">
     <Navbar />
     <main className="flex-1">{children}</main>
     <Footer />

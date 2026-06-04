@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import add_icon from "./add_icon.svg";
 import apple_earphone_image from "./apple_earphone_image.png";
 import arrow_icon from "./arrow_icon.svg";
@@ -462,6 +463,16 @@ export const orderDummyData = [
     status: "Đã đặt hàng",
     userId: "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
   },
+];
+
+export const categories = [
+  "Tai nghe nhét tai",
+  "Tai nghe chụp tai",
+  "Điện thoại",
+  "Đồng hồ thông minh",
+  "Phụ kiện",
+  "Máy ảnh",
+  "Laptop",
 ];
 
 export const addressDummyData = [

@@ -110,7 +110,7 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  function logoutUser(navigate) {
+  function logoutUser(navigate, redirectTo = "/login") {
     localStorage.removeItem("token");
     Cookies.remove("token", {
       path: "/",
@@ -119,7 +119,7 @@ export const UserProvider = ({ children }) => {
     setIsAuth(false);
     setUser([]);
     toast.success("Đã đăng xuất");
-    navigate("/login");
+    navigate(redirectTo);
   }
 
   return (

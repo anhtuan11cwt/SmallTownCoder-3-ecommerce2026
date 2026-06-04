@@ -18,30 +18,30 @@ export const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState([]);
   const [relatedProduct, setRelatedProduct] = useState([]);
 
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      let url = `${SERVER}/api/product/all?page=${page}`;
+
+      if (search) url += `&search=${search}`;
+      if (category) url += `&category=${category}`;
+      if (price) url += `&sortByPrice=${price}`;
+
+      const { data } = await axios.get(url);
+      setProducts(data.products);
+      setNewProd(data.newProducts);
+      setCategories(data.categories);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search, category, price]);
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        let url = `${SERVER}/api/product/all?page=${page}`;
-
-        if (search) url += `&search=${search}`;
-        if (category) url += `&category=${category}`;
-        if (price) url += `&sortByPrice=${price}`;
-
-        const { data } = await axios.get(url);
-        setProducts(data.products);
-        setNewProd(data.newProducts);
-        setCategories(data.categories);
-        setTotalPages(data.totalPages);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchProducts();
-  }, [search, category, price, page]);
+    void Promise.resolve().then(() => fetchProducts());
+  }, [fetchProducts]);
 
   const fetchProduct = useCallback(async (id) => {
     setLoading(true);
@@ -70,6 +70,7 @@ export const ProductProvider = ({ children }) => {
         category,
         clearFilters,
         fetchProduct,
+        fetchProducts,
         loading,
         newProd,
         page,

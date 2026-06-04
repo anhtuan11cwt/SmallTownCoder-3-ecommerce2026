@@ -1,5 +1,5 @@
 const InfoPage = () => {
-  return <div>InfoPage Component (Biểu đồ thông tin)</div>;
+  return <div>Trang thông tin (Biểu đồ phân tích)</div>;
 };
 
 export default InfoPage;

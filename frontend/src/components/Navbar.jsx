@@ -22,7 +22,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setTotalItem(0);
-    logoutUser(navigate);
+    const redirectTo = user?.role === "admin" ? "/admin/login" : "/login";
+    logoutUser(navigate, redirectTo);
   };
 
   const navItems = [
@@ -32,11 +33,11 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 print:hidden">
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+    <nav className="print:hidden fixed top-0 left-0 z-50 bg-background/50 supports-[backdrop-filter]:bg-background/60 backdrop-blur border-b w-full">
+      <div className="flex justify-between items-center mx-auto px-4 py-3 container">
         {/* Brand */}
         <button
-          className="text-2xl font-bold"
+          className="font-bold text-2xl"
           onClick={() => navigate("/")}
           type="button"
         >
@@ -44,11 +45,11 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Menu */}
-        <ul className="hidden items-center space-x-6 sm:flex">
+        <ul className="hidden sm:flex items-center space-x-6">
           {navItems.map((item) => (
             <li key={item.path}>
               <button
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className="font-medium hover:text-primary text-sm transition-colors"
                 onClick={() => navigate(item.path)}
                 type="button"
               >
@@ -65,8 +66,8 @@ const Navbar = () => {
               onClick={() => navigate("/cart")}
               type="button"
             >
-              <ShoppingCart className="h-6 w-6" />
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+              <ShoppingCart className="w-6 h-6" />
+              <span className="-top-2 -right-2 absolute flex justify-center items-center bg-red-500 rounded-full w-5 h-5 font-bold text-white text-xs">
                 {totalItem}
               </span>
             </button>
@@ -78,9 +79,9 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Button className="cursor-pointer" size="icon" variant="ghost">
                   {isAuth ? (
-                    <User className="h-5 w-5" />
+                    <User className="w-5 h-5" />
                   ) : (
-                    <LogIn className="h-5 w-5" />
+                    <LogIn className="w-5 h-5" />
                   )}
                 </Button>
               </DropdownMenuTrigger>
@@ -130,15 +131,15 @@ const Navbar = () => {
         </ul>
 
         {/* Mobile: Cart + Auth + Toggle + Hamburger */}
-        <div className="flex items-center gap-2 sm:hidden">
+        <div className="sm:hidden flex items-center gap-2">
           <button
             aria-label="View cart"
             className="relative flex items-center"
             onClick={() => navigate("/cart")}
             type="button"
           >
-            <ShoppingCart className="h-5 w-5" />
-            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            <ShoppingCart className="w-5 h-5" />
+            <span className="-top-2 -right-2 absolute flex justify-center items-center bg-red-500 rounded-full w-4 h-4 font-bold text-[10px] text-white">
               {totalItem}
             </span>
           </button>
@@ -147,9 +148,9 @@ const Navbar = () => {
             <DropdownMenuTrigger asChild>
               <Button className="cursor-pointer" size="icon" variant="ghost">
                 {isAuth ? (
-                  <User className="h-5 w-5" />
+                  <User className="w-5 h-5" />
                 ) : (
-                  <LogIn className="h-5 w-5" />
+                  <LogIn className="w-5 h-5" />
                 )}
               </Button>
             </DropdownMenuTrigger>
@@ -200,9 +201,9 @@ const Navbar = () => {
             variant="ghost"
           >
             {mobileMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="w-5 h-5" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className="w-5 h-5" />
             )}
           </Button>
         </div>
@@ -210,12 +211,12 @@ const Navbar = () => {
 
       {/* Mobile Slide-down Menu */}
       {mobileMenuOpen && (
-        <div className="border-t bg-background/95 backdrop-blur sm:hidden">
+        <div className="sm:hidden bg-background/95 backdrop-blur border-t">
           <ul className="flex flex-col space-y-1 px-4 py-3">
             {navItems.map((item) => (
               <li key={item.path}>
                 <button
-                  className="w-full rounded-md px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                  className="hover:bg-accent px-3 py-2 rounded-md w-full font-medium text-sm text-left transition-colors hover:text-accent-foreground"
                   onClick={() => {
                     navigate(item.path);
                     setMobileMenuOpen(false);

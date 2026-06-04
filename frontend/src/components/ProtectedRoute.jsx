@@ -24,7 +24,10 @@ export const ProtectedRoute = ({
 
   // Nếu yêu cầu đăng nhập
   if (requireAuth && !isAuth) {
-    return <Navigate to="/login" />;
+    const loginPath = pathname.startsWith("/admin/")
+      ? "/admin/login"
+      : "/login";
+    return <Navigate to={loginPath} />;
   }
 
   // Chặn admin truy cập các trang không phải /admin/*
