@@ -1,20 +1,6 @@
-import nodemailer from "nodemailer";
+import sendMail from "./sendMail.js";
 
 const sendOtp = async (email, subject, otp) => {
-  const transport = nodemailer.createTransport({
-    auth: {
-      pass: process.env.GMAIL_PASSWORD,
-      user: process.env.GMAIL,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    host: "smtp.gmail.com",
-    port: 587,
-    requireTLS: true,
-    secure: false,
-    socketTimeout: 15000,
-  });
-
   const html = `<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -78,12 +64,7 @@ const sendOtp = async (email, subject, otp) => {
 </html>`;
 
   try {
-    await transport.sendMail({
-      from: process.env.GMAIL,
-      html,
-      subject,
-      to: email,
-    });
+    await sendMail({ from: process.env.GMAIL, html, subject, to: email });
   } catch (error) {
     console.error(`[sendOtp] Lỗi gửi email đến ${email}:`, error.message);
     throw new Error("Không thể gửi OTP. Vui lòng thử lại sau.", {
