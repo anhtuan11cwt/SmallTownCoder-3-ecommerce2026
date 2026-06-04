@@ -52,3 +52,21 @@ export const myProfile = tryCatch(async (req, res) => {
 
   res.json(user);
 });
+
+export const adminLogin = tryCatch(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user?.role !== "admin" || user.password !== password) {
+    return res
+      .status(403)
+      .json({ message: "Thông tin đăng nhập không hợp lệ" });
+  }
+
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "15d",
+  });
+
+  res.json({ message: "Đăng nhập Admin thành công", token, user });
+});

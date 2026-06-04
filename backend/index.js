@@ -7,6 +7,7 @@ import cartRoutes from "./routes/cart.js";
 import orderRoutes from "./routes/order.js";
 import productRoutes from "./routes/product.js";
 import userRoutes from "./routes/User.js";
+import seedAdmin from "./seeds/seedAdmin.js";
 import seedProducts from "./seeds/seedProducts.js";
 import connectDB from "./utils/db.js";
 import "./config/cloudinary.js";
@@ -27,6 +28,7 @@ app.use("/api", orderRoutes);
 
 connectDB().then(() => {
   seedProducts();
+  seedAdmin();
 });
 
 app.listen(port, () => {

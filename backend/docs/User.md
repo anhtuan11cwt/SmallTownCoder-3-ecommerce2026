@@ -137,8 +137,59 @@
   }
   ```
 
+### 4. Đăng nhập Admin
+- **Method:** POST
+- **URL:** `http://localhost:5000/api/user/admin/login`
+
+#### Headers
+- **Key:** `Content-Type`
+- **Value:** `application/json`
+- **Required:** Có
+- **Description:** Định dạng nội dung yêu cầu
+- **Authorization Headers:** Không yêu cầu
+
+#### Body
+- **Format:** Raw JSON
+- **Content:**
+  ```json
+  {
+    "email": "admin@gmail.com",
+    "password": "password"
+  }
+  ```
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "message": "Đăng nhập Admin thành công",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "_id": "60d5ec49f1b2c51f3c8e4d2a",
+      "email": "admin@gmail.com",
+      "role": "admin",
+      "createdAt": "2026-05-29T15:56:00.000Z",
+      "updatedAt": "2026-05-29T16:00:00.000Z"
+    }
+  }
+  ```
+- **Error (403 - Thông tin đăng nhập không hợp lệ):**
+  ```json
+  {
+    "message": "Thông tin đăng nhập không hợp lệ"
+  }
+  ```
+
 ---
 ## Test Cases
+- **Test Case:** Đăng nhập Admin thành công
+  - **Input:** Email + mật khẩu admin chính xác
+  - **Expected Result:** 200 + token JWT + thông tin admin
+
+- **Test Case:** Đăng nhập Admin thất bại (sai thông tin)
+  - **Input:** Email hoặc mật khẩu sai, hoặc không phải admin
+  - **Expected Result:** 403 + "Thông tin đăng nhập không hợp lệ"
+
 - **Test Case:** Gửi OTP thành công
   - **Input:** Email hợp lệ
   - **Expected Result:** 200 + "Đã gửi OTP đến email của bạn"
