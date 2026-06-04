@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -43,6 +44,13 @@ const UserLayout = ({ children }) => (
   </div>
 );
 
+const ScrollToTop = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
+  return null;
+};
+
 function App() {
   const { loading } = useUserData();
 
@@ -50,6 +58,7 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <Routes>
         {/* Routes dành cho user — có Navbar + Footer */}
         <Route
