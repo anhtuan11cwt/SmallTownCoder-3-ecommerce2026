@@ -1,5 +1,5 @@
+import "dotenv/config";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
 // Import routes
 import addressRoutes from "./routes/address.js";
@@ -10,8 +10,6 @@ import userRoutes from "./routes/User.js";
 import seedProducts from "./seeds/seedProducts.js";
 import connectDB from "./utils/db.js";
 import "./config/cloudinary.js";
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;

@@ -48,7 +48,63 @@
   }
   ```
 
-### 2. Lấy đơn hàng của người dùng
+### 2. Tạo đơn hàng mới (Online)
+- **Method:** POST
+- **URL:** `http://localhost:5000/api/order/new/online`
+
+#### Headers
+- **Key:** `token`
+- **Value:** `USER_JWT_TOKEN`
+- **Required:** Có
+
+#### Body
+- **Format:** Raw JSON
+- **Content:**
+  ```json
+  {
+    "method": "Online",
+    "phoneNumber": "0901234567",
+    "address": "Số 1, Đường A, Quận B, TP.HCM"
+  }
+  ```
+
+#### Response
+- **Success (200 OK):**
+  ```json
+  {
+    "url": "https://checkout.stripe.com/..."
+  }
+  ```
+- **Error (400 - Giỏ hàng trống):**
+  ```json
+  {
+    "message": "Giỏ hàng trống"
+  }
+  ```
+
+### 3. Xác thực thanh toán
+- **Method:** POST
+- **URL:** `http://localhost:5000/api/order/verify/payment?session_id=CHECKOUT_SESSION_ID`
+
+#### Headers
+- **Key:** `token`
+- **Value:** `USER_JWT_TOKEN`
+- **Required:** Có
+
+#### Query Parameters
+- `session_id` (required): ID phiên thanh toán Stripe
+
+#### Response
+- **Success (201 Created):**
+  ```json
+  {
+    "message": "Đơn hàng đã được tạo",
+    "order": { ... },
+    "success": true
+  }
+  ```
+
+### 4. Lấy đơn hàng của người dùng
 - **Method:** GET
 - **URL:** `http://localhost:5000/api/order/all`
 
@@ -71,7 +127,7 @@
   ]
   ```
 
-### 3. Lấy tất cả đơn hàng (Admin)
+### 5. Lấy tất cả đơn hàng (Admin)
 - **Method:** GET
 - **URL:** `http://localhost:5000/api/order/all/admin`
 
@@ -92,7 +148,7 @@
   }
   ```
 
-### 4. Lấy thống kê đơn hàng (Admin)
+### 6. Lấy thống kê đơn hàng (Admin)
 - **Method:** GET
 - **URL:** `http://localhost:5000/api/order/stats`
 
@@ -113,7 +169,7 @@
   }
   ```
 
-### 5. Lấy chi tiết đơn hàng
+### 7. Lấy chi tiết đơn hàng
 - **Method:** GET
 - **URL:** `http://localhost:5000/api/order/:id`
 
@@ -132,7 +188,7 @@
   }
   ```
 
-### 6. Cập nhật trạng thái đơn hàng (Admin)
+### 8. Cập nhật trạng thái đơn hàng (Admin)
 - **Method:** POST
 - **URL:** `http://localhost:5000/api/order/status/:id`
 
@@ -167,9 +223,17 @@
 
 ---
 ## Test Cases
-- **Test Case:** Tạo đơn hàng thành công
-  - **Input:** Token hợp lệ, body đầy đủ
+- **Test Case:** Tạo đơn hàng thành công (COD)
+  - **Input:** Token hợp lệ, body đầy đủ (method: COD)
   - **Expected Result:** 201 + "Đơn hàng đã được tạo thành công"
+
+- **Test Case:** Tạo đơn hàng thành công (Online)
+  - **Input:** Token hợp lệ, body đầy đủ (method: Online)
+  - **Expected Result:** 200 + URL thanh toán Stripe
+
+- **Test Case:** Xác thực thanh toán thành công
+  - **Input:** Token hợp lệ, session_id hợp lệ
+  - **Expected Result:** 201 + "Đơn hàng đã được tạo"
 
 - **Test Case:** Lấy danh sách đơn hàng (User) thành công
   - **Input:** Token user hợp lệ
