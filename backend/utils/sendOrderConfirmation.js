@@ -12,8 +12,13 @@ const sendOrderConfirmation = async (
       pass: process.env.GMAIL_PASSWORD,
       user: process.env.GMAIL,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
     host: "smtp.gmail.com",
-    port: 465,
+    port: 587,
+    requireTLS: true,
+    secure: false,
+    socketTimeout: 15000,
   });
 
   const productsHtml = products
@@ -76,12 +81,20 @@ const sendOrderConfirmation = async (
 </body>
 </html>`;
 
-  await transport.sendMail({
-    from: process.env.GMAIL,
-    html,
-    subject,
-    to: email,
-  });
+  try {
+    await transport.sendMail({
+      from: process.env.GMAIL,
+      html,
+      subject,
+      to: email,
+    });
+  } catch (error) {
+    console.error(
+      `[sendOrderConfirmation] Lỗi gửi email xác nhận đến ${email}:`,
+      error.message,
+    );
+    throw new Error("Không thể gửi email xác nhận đơn hàng.", { cause: error });
+  }
 };
 
 export default sendOrderConfirmation;

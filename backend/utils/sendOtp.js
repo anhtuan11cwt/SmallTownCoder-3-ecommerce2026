@@ -6,8 +6,13 @@ const sendOtp = async (email, subject, otp) => {
       pass: process.env.GMAIL_PASSWORD,
       user: process.env.GMAIL,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
     host: "smtp.gmail.com",
-    port: 465,
+    port: 587,
+    requireTLS: true,
+    secure: false,
+    socketTimeout: 15000,
   });
 
   const html = `<!DOCTYPE html>
@@ -72,12 +77,19 @@ const sendOtp = async (email, subject, otp) => {
 </body>
 </html>`;
 
-  await transport.sendMail({
-    from: process.env.GMAIL,
-    html,
-    subject,
-    to: email,
-  });
+  try {
+    await transport.sendMail({
+      from: process.env.GMAIL,
+      html,
+      subject,
+      to: email,
+    });
+  } catch (error) {
+    console.error(`[sendOtp] Lỗi gửi email đến ${email}:`, error.message);
+    throw new Error("Không thể gửi OTP. Vui lòng thử lại sau.", {
+      cause: error,
+    });
+  }
 };
 
 export default sendOtp;
