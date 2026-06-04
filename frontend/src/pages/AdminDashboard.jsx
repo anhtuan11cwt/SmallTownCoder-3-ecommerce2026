@@ -1,5 +1,5 @@
 import { BarChart3, LogOut, Menu, Package, ShoppingBag, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HomePage from "@/components/admin/HomePage";
 import InfoPage from "@/components/admin/InfoPage";
@@ -26,6 +26,12 @@ const AdminDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, logoutUser } = useUserData();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role && user.role !== "admin") {
+      navigate("/", { replace: true });
+    }
+  }, [user, navigate]);
 
   const adminInitial = user?.email?.charAt(0).toUpperCase() || "A";
 
