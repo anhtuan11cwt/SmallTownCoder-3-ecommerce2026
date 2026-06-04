@@ -15,7 +15,7 @@ import { useCartData } from "@/context/use-cart-data";
 import { useUserData } from "@/context/use-user-data";
 
 const Navbar = () => {
-  const { isAuth, logoutUser } = useUserData();
+  const { isAuth, logoutUser, user } = useUserData();
   const { totalItem, setTotalItem } = useCartData();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,7 +32,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 print:hidden">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         {/* Brand */}
         <button
@@ -102,12 +102,14 @@ const Navbar = () => {
                     >
                       Đơn Hàng
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onClick={() => navigate("/dashboard")}
-                    >
-                      Bảng Điều Khiển
-                    </DropdownMenuItem>
+                    {user?.role === "admin" && (
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => navigate("/admin/dashboard")}
+                      >
+                        Dashboard
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer"
@@ -169,12 +171,14 @@ const Navbar = () => {
                   >
                     Đơn Hàng
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    Bảng Điều Khiển
-                  </DropdownMenuItem>
+                  {user?.role === "admin" && (
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => navigate("/admin/dashboard")}
+                    >
+                      Dashboard
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"

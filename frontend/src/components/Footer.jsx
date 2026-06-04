@@ -56,7 +56,7 @@ const InstagramIcon = ({ title = "Instagram", ...props }) => (
 
 const Footer = () => {
   return (
-    <footer className="w-full mt-auto">
+    <footer className="w-full mt-auto print:hidden">
       <hr className="border border-gray-300 dark:border-gray-700" />
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center">
