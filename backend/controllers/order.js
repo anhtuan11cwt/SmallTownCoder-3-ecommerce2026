@@ -200,6 +200,15 @@ export const getMyOrder = tryCatch(async (req, res) => {
     return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
   }
 
+  if (
+    order.user._id.toString() !== req.user._id.toString() &&
+    req.user.role !== "admin"
+  ) {
+    return res.status(403).json({
+      message: "Bạn không có quyền truy cập đơn hàng này",
+    });
+  }
+
   res.status(200).json(order);
 });
 
