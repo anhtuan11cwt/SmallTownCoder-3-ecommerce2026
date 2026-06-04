@@ -1,6 +1,10 @@
 import "./App.css";
 import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
+import AdminProductDetail from "@/components/admin/AdminProductDetail";
+import HomePage from "@/components/admin/HomePage";
+import InfoPage from "@/components/admin/InfoPage";
+import OrdersPage from "@/components/admin/OrdersPage";
 import Footer from "@/components/Footer";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
@@ -147,8 +151,12 @@ function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
-          path="/admin/dashboard"
-        />
+        >
+          <Route element={<InfoPage />} path="/admin/dashboard" />
+          <Route element={<HomePage />} path="/admin/products" />
+          <Route element={<AdminProductDetail />} path="/admin/products/:id" />
+          <Route element={<OrdersPage />} path="/admin/orders" />
+        </Route>
         <Route
           element={
             <ProtectedRoute publicOnly>

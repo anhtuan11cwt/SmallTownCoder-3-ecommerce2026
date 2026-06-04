@@ -1,9 +1,7 @@
 import { BarChart3, LogOut, Menu, Package, ShoppingBag, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import HomePage from "@/components/admin/HomePage";
-import InfoPage from "@/components/admin/InfoPage";
-import OrdersPage from "@/components/admin/OrdersPage";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,16 +14,19 @@ import {
 import { useUserData } from "@/context/use-user-data";
 
 const NAV_ITEMS = [
-  { icon: Package, id: "home", label: "Sản phẩm" },
-  { icon: ShoppingBag, id: "orders", label: "Đơn hàng" },
-  { icon: BarChart3, id: "info", label: "Phân tích" },
+  { icon: BarChart3, id: "", label: "Phân tích", path: "/admin/dashboard" },
+  { icon: Package, id: "products", label: "Sản phẩm", path: "/admin/products" },
+  { icon: ShoppingBag, id: "orders", label: "Đơn hàng", path: "/admin/orders" },
 ];
 
 const AdminDashboard = () => {
-  const [selectedPage, setSelectedPage] = useState("home");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, logoutUser } = useUserData();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const activePage =
+    NAV_ITEMS.find((item) => location.pathname === item.path)?.id || "";
 
   useEffect(() => {
     if (user?.role && user.role !== "admin") {
@@ -35,21 +36,8 @@ const AdminDashboard = () => {
 
   const adminInitial = user?.email?.charAt(0).toUpperCase() || "A";
 
-  const renderPageContent = () => {
-    switch (selectedPage) {
-      case "home":
-        return <HomePage />;
-      case "orders":
-        return <OrdersPage />;
-      case "info":
-        return <InfoPage />;
-      default:
-        return <HomePage />;
-    }
-  };
-
-  const handleNavClick = (id) => {
-    setSelectedPage(id);
+  const handleNavClick = (path) => {
+    navigate(path);
     setIsSidebarOpen(false);
   };
 
@@ -99,7 +87,7 @@ const AdminDashboard = () => {
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isActive = selectedPage === item.id;
+              const isActive = activePage === item.id;
               return (
                 <button
                   aria-current={isActive ? "page" : undefined}
@@ -110,7 +98,7 @@ const AdminDashboard = () => {
                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                   }`}
                   key={item.id}
-                  onClick={() => handleNavClick(item.id)}
+                  onClick={() => handleNavClick(item.path)}
                   type="button"
                 >
                   {isActive && (
@@ -150,59 +138,61 @@ const AdminDashboard = () => {
               <Menu className="size-5" />
             </Button>
             <h1 className="hidden lg:block font-semibold text-foreground text-lg">
-              {NAV_ITEMS.find((i) => i.id === selectedPage)?.label ||
-                "Tổng quan"}
+              {NAV_ITEMS.find((i) => i.id === activePage)?.label || "Tổng quan"}
             </h1>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Menu người dùng"
-                className="gap-2.5"
-                variant="ghost"
-              >
-                <div className="flex justify-center items-center bg-primary rounded-full size-8 font-semibold text-primary-foreground text-xs">
-                  {adminInitial}
-                </div>
-                <div className="hidden md:block text-left">
-                  <div className="font-medium text-foreground text-sm">
-                    Quản trị viên
-                  </div>
-                  <div className="text-muted-foreground text-xs">
-                    {user?.email || ""}
-                  </div>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex items-center gap-3">
-                  <div className="flex justify-center items-center bg-primary rounded-full size-9 font-semibold text-primary-foreground text-sm">
+          <div className="flex items-center gap-2">
+            <ModeToggle />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  aria-label="Menu người dùng"
+                  className="gap-2.5"
+                  variant="ghost"
+                >
+                  <div className="flex justify-center items-center bg-primary rounded-full size-8 font-semibold text-primary-foreground text-xs">
                     {adminInitial}
                   </div>
-                  <div>
-                    <div className="font-medium text-sm">Quản trị viên</div>
+                  <div className="hidden md:block text-left">
+                    <div className="font-medium text-foreground text-sm">
+                      Quản trị viên
+                    </div>
                     <div className="text-muted-foreground text-xs">
                       {user?.email || ""}
                     </div>
                   </div>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive focus:text-destructive cursor-pointer"
-                onClick={handleLogout}
-              >
-                <LogOut className="size-4" />
-                Đăng xuất
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex items-center gap-3">
+                    <div className="flex justify-center items-center bg-primary rounded-full size-9 font-semibold text-primary-foreground text-sm">
+                      {adminInitial}
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm">Quản trị viên</div>
+                      <div className="text-muted-foreground text-xs">
+                        {user?.email || ""}
+                      </div>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="size-4" />
+                  Đăng xuất
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
 
         <main className="flex-1 min-h-0 overflow-y-auto p-4 lg:p-6">
-          {renderPageContent()}
+          <Outlet />
         </main>
       </div>
     </div>

@@ -1,15 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUserData } from "@/context/use-user-data";
 
 const ProductCard = ({ product, latest }) => {
   const navigate = useNavigate();
+  const { user } = useUserData();
+  const isAdmin = user?.role === "admin";
+  const detailPath = isAdmin
+    ? `/admin/products/${product._id}`
+    : `/product/${product._id}`;
 
   if (!product) return null;
 
   return (
     <div className="mx-auto w-full overflow-hidden rounded-lg border border-gray-200 shadow-md transition-shadow hover:shadow-lg dark:border-gray-700">
-      <Link to={`/product/${product._id}`}>
+      <Link to={detailPath}>
         <div className="relative flex h-[250px] items-center justify-center bg-gray-100 sm:h-[300px]">
           {latest === "yes" && (
             <Badge className="absolute left-2 top-2 bg-green-500 text-white">
@@ -37,10 +43,7 @@ const ProductCard = ({ product, latest }) => {
       </div>
 
       <div className="flex items-center justify-center px-4 pb-4">
-        <Button
-          className="w-full"
-          onClick={() => navigate(`/product/${product._id}`)}
-        >
+        <Button className="w-full" onClick={() => navigate(detailPath)}>
           Xem Chi Tiết
         </Button>
       </div>
