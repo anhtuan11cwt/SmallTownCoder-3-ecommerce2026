@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUserData } from "@/context/use-user-data";
 
 const statusMap = {
   cancelled: "Đã hủy",
@@ -23,6 +24,7 @@ const server = import.meta.env.VITE_SERVER_URL;
 
 const OrderPage = () => {
   const { id } = useParams();
+  const { user } = useUserData();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -56,6 +58,24 @@ const OrderPage = () => {
           Không tìm thấy đơn hàng với ID này
         </h1>
         <Button onClick={() => navigate("/products")}>Mua sắm ngay</Button>
+      </div>
+    );
+  }
+
+  const isAuthorized =
+    !Array.isArray(user) &&
+    (user._id === order.user?._id || user.role === "admin");
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[70vh] text-center">
+        <p className="text-red-500 text-3xl text-center">
+          This is not your order
+        </p>
+        <br />
+        <Link className="mt-4 underline text-blue-400" to="/">
+          Go to Home Page
+        </Link>
       </div>
     );
   }

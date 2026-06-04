@@ -84,14 +84,7 @@ function App() {
                   }
                   path="/products"
                 />
-                <Route
-                  element={
-                    <UserOnlyRoute>
-                      <ProductPage />
-                    </UserOnlyRoute>
-                  }
-                  path="/product/:id"
-                />
+                <Route element={<ProductPage />} path="/product/:id" />
                 <Route
                   element={
                     <ProtectedRoute>
