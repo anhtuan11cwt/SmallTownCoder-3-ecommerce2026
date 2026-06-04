@@ -50,7 +50,7 @@ export const verifyUser = tryCatch(async (req, res) => {
 export const myProfile = tryCatch(async (req, res) => {
   const user = await User.findById(req.user._id);
 
-  res.json(user);
+  res.json({ user });
 });
 
 export const adminLogin = tryCatch(async (req, res) => {

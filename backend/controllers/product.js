@@ -4,12 +4,6 @@ import bufferGenerator from "../utils/bufferGenerator.js";
 import tryCatch from "../utils/tryCatch.js";
 
 export const createProduct = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(401).json({
-      message: "Bạn không phải là admin",
-    });
-  }
-
   const { title, about, category, price, stock } = req.body;
 
   const files = req.files;
@@ -108,12 +102,6 @@ export const getSingleProduct = tryCatch(async (req, res) => {
 });
 
 export const updateProduct = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(401).json({
-      message: "Bạn không phải là admin",
-    });
-  }
-
   const { title, about, stock, price, category } = req.body;
 
   const updateFields = {};
@@ -141,12 +129,6 @@ export const updateProduct = tryCatch(async (req, res) => {
 });
 
 export const updateProductImage = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(401).json({
-      message: "Bạn không phải là admin",
-    });
-  }
-
   const id = req.params.id;
   const files = req.files;
 

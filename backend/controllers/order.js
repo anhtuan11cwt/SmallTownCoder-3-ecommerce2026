@@ -179,11 +179,7 @@ export const getAllOrders = tryCatch(async (req, res) => {
   res.status(200).json(orders);
 });
 
-export const getAllOrdersAdmin = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Bạn không phải là admin" });
-  }
-
+export const getAllOrdersAdmin = tryCatch(async (_req, res) => {
   const orders = await Order.find().populate("user").sort({ createdAt: -1 });
 
   res.status(200).json(orders);
@@ -208,10 +204,6 @@ export const getMyOrder = tryCatch(async (req, res) => {
 });
 
 export const updateStatus = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Bạn không phải là admin" });
-  }
-
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -234,11 +226,7 @@ export const updateStatus = tryCatch(async (req, res) => {
     .json({ message: "Trạng thái đơn hàng đã được cập nhật", order });
 });
 
-export const getStats = tryCatch(async (req, res) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Bạn không phải là admin" });
-  }
-
+export const getStats = tryCatch(async (_req, res) => {
   const codOrder = await Order.countDocuments({ method: "COD" });
   const onlineOrder = await Order.countDocuments({ method: "Online" });
 
