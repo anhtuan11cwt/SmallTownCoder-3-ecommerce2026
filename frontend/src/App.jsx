@@ -10,6 +10,8 @@ import Checkout from "@/pages/Checkout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
+import OrderProcessing from "@/pages/OrderProcessing";
+import Payment from "@/pages/Payment";
 import ProductPage from "@/pages/ProductPage";
 import Products from "@/pages/Products";
 import Verify from "@/pages/Verify";
@@ -36,6 +38,14 @@ function App() {
           <Route
             element={isAuth ? <Checkout /> : <Navigate to="/login" />}
             path="/checkout"
+          />
+          <Route
+            element={isAuth ? <Payment /> : <Navigate to="/login" />}
+            path="/payment/:id"
+          />
+          <Route
+            element={isAuth ? <OrderProcessing /> : <Navigate to="/login" />}
+            path="/order/success"
           />
           <Route element={<NotFound />} path="*" />
         </Routes>
