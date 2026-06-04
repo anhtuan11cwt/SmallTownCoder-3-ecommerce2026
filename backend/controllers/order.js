@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Stripe from "stripe";
 import { Cart } from "../models/cart.js";
 import { Order } from "../models/order.js";
@@ -189,7 +190,13 @@ export const getAllOrdersAdmin = tryCatch(async (req, res) => {
 });
 
 export const getMyOrder = tryCatch(async (req, res) => {
-  const order = await Order.findById(req.params.id)
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
+  }
+
+  const order = await Order.findById(id)
     .populate("items.product")
     .populate("user");
 
@@ -205,7 +212,13 @@ export const updateStatus = tryCatch(async (req, res) => {
     return res.status(403).json({ message: "Bạn không phải là admin" });
   }
 
-  const order = await Order.findById(req.params.id);
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "ID đơn hàng không hợp lệ" });
+  }
+
+  const order = await Order.findById(id);
 
   if (!order) {
     return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
